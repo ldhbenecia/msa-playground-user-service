@@ -1,0 +1,16 @@
+server:
+  port: 8081
+
+spring:
+  application:
+    name: user-service
+  profiles:
+    active: dev
+
+  config:
+    import: "configserver:http://localhost:9000"
+
+  cloud:
+    config:
+      username: admin
+      password: admin
