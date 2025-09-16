@@ -14,4 +14,9 @@ public class HealthController {
     public String healthCheck() {
         return message;
     }
+
+    @GetMapping("/welcome")
+    public String welcome(){
+        return "Welcome User Service";
+    }
 }
