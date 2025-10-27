@@ -24,7 +24,7 @@ spring:
 
   datasource:
     driver-class-name: org.h2.Driver
-    url: jdbc:h2:tcp://localhost/~/test;MODE=MySQL;DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=FALSE
+    url: jdbc:h2:mem:userdb;DB_CLOSE_DELAY=-1
     username: sa
     password:
     hikari:
@@ -37,7 +37,7 @@ spring:
 
   jpa:
     hibernate:
-      ddl-auto: update
+      ddl-auto: create-drop
     properties:
       hibernate:
         format_sql: true
@@ -47,6 +47,6 @@ spring:
   h2:
     console:
       enabled: true
-      path: /h2-console
+      path: /user-h2-console
       settings:
         web-allow-others: true
