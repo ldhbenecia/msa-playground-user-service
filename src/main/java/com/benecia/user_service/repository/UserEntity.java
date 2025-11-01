@@ -36,10 +36,18 @@ public class UserEntity {
     @Column(nullable = false)
     private String encryptedPwd;
 
+    @Column(nullable = false)
+    private Long points;
+
     public UserEntity(String email, String name, String userId, String encryptedPwd) {
         this.email = email;
         this.name = name;
         this.userId = userId;
         this.encryptedPwd = encryptedPwd;
+        this.points = 0L;
+    }
+
+    public void addPoints(long pointsToAdd) {
+        this.points += pointsToAdd;
     }
 }
