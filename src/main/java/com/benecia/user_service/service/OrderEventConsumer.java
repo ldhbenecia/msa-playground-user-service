@@ -36,7 +36,7 @@ public class OrderEventConsumer {
                         e.getMessage()
                 );
 
-                streamBridge.send("points-failed-out-0", failedDto);
+                streamBridge.send("pointsFailed-out-0", failedDto);
                 log.info("Published points-failed event for orderId: {}", orderDto.orderId());
             } catch (Exception e) { // 7. 그 외 알 수 없는 예외 처리
                 log.error("Unexpected error processing order-created event for userId: {}", orderDto.userId(), e);
@@ -45,7 +45,7 @@ public class OrderEventConsumer {
                         orderDto.userId(),
                         "Unexpected error: " + e.getMessage()
                 );
-                streamBridge.send("points-failed-out-0", failedDto);
+                streamBridge.send("pointsFailed-out-0", failedDto);
                 log.info("Published points-failed (unexpected) event for orderId: {}", orderDto.orderId());
             }
         };
