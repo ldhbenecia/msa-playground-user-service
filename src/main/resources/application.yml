@@ -1,18 +1,47 @@
 server:
   port: 8081
 
+health:
+  message: "Hello from user-service in DEV!"
+
 spring:
   application:
     name: user-service
   profiles:
     active: dev
 
+  datasource:
+    driver-class-name: org.h2.Driver
+    url: ${DB_URL}
+    username: ${DB_USER}
+    password: ${DB_PASSWORD}
+
+  jpa:
+    hibernate:
+      ddl-auto: create-drop
+
+  h2:
+    console:
+      enabled: true
+      path: /user-h2-console
+
   cloud:
+    function:
+      definition: orderCreated
+    stream:
+      kafka:
+        binder:
+          brokers: ${KAFKA_BROKERS}
+      bindings:
+        orderCreated-in-0:
+          destination: order-created
+          group: user-service
+        pointsFailed-out-0:
+          destination: points-failed
+          content-type: application/json
+
     kubernetes:
       config:
-        enabled: true
-        name: user-service-config
-        paths: /workspace/config
-      # 4. K8s Service Discovery 활성화 (Eureka 대체)
+        enabled: false
       discovery:
         enabled: true
