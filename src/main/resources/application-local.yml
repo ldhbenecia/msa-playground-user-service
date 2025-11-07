@@ -40,3 +40,12 @@ spring:
         enabled: false # ❗️ K8s ConfigMap 읽기 끄기
       discovery:
         enabled: false # ❗️ K8s Service Discovery 끄기
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "health,info,metrics,prometheus"
+  metrics:
+    tags:
+      application: user-service
