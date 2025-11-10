@@ -69,7 +69,7 @@ jobs:
       - name: Checkout Helm repository
         uses: actions/checkout@v4
         with:
-          repository: ldhbenecia/msa-playground-helm
+          repository: git@github.com:ldhbenecia/msa-playground-helm.git
           ssh-key: ${{ secrets.HELM_DEPLOY_KEY }}
           path: msa-playground-helm
 
