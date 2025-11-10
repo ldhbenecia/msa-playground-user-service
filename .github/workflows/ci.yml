@@ -39,5 +39,5 @@ jobs:
           context: .
           push: true
           tags: |
-            ${{ secrets.DOCKERHUB_USERNAME }}/user-service:latest
-            ${{ secrets.DOCKERHUB_USERNAME }}/user-service:${{ env.SHORT_SHA }}
+            ${{ secrets.DOCKERHUB_USERNAME }}/msa-playground-user-service:${{ env.SHORT_SHA }}
+            ${{ secrets.DOCKERHUB_USERNAME }}/msa-playground-user-service:latest
