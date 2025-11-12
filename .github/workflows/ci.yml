@@ -1,14 +1,20 @@
-name: MSA Service CI - Build and Push Docker Image
+name: MSA User-Service CI/CD
 
 on:
   push:
     branches: [ "main" ]
+    paths:
+      - 'src/**'
+      - 'build.gradle'
+      - 'Dockerfile'
+      - '.github/workflows/ci.yml'
 
 jobs:
   # -----------------------------------------------
   # JOB 1: CI (Docker 이미지 빌드 & 푸시)
   # -----------------------------------------------
   build-and-push-docker:
+    name: Build and Push Docker Image
     runs-on: ubuntu-latest
 
     outputs:
@@ -56,6 +62,7 @@ jobs:
   # JOB 2: CD Trigger (Helm 레포지토리의 values.yaml 수정)
   # -----------------------------------------------
   update-helm-repository:
+    name: Update Helm Values
     needs: build-and-push-docker
     runs-on: ubuntu-latest
 
@@ -85,9 +92,8 @@ jobs:
       - name: Commit and push changes to Helm repo
         run: |
           cd msa-playground-helm
-          git config --global user.name "GitHub Actions CI"
-          git config --global user.email "ci@github.actions"
+          git config user.name "${{ github.actor }}"
+          git config user.email "${{ github.actor }}@users.noreply.github.com"
           git add .
-          # (이미 같은 태그로 배포된 경우, 변경 사항이 없으므로 오류 없이 종료)
-          git commit -m "ci(user-service): Update image tag to ${{ needs.build-and-push-docker.outputs.image_tag }}" || exit 0
+          git diff --staged --quiet || git commit -m "ci(order-service): Update image tag to ${{ needs.build-and-push-docker.outputs.image_tag }}"
           git push
