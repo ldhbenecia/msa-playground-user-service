@@ -1,14 +1,14 @@
 name: MSA User-Service CI/CD
 
 on:
-  push:
-    branches: [ "main" ]
-    paths:
-      - 'src/**'
-      - 'build.gradle'
-      - 'Dockerfile'
-      - '.github/workflows/ci.yml'
-
+#  push:
+#    branches: [ "main" ]
+#    paths:
+#      - 'src/**'
+#      - 'build.gradle'
+#      - 'Dockerfile'
+#      - '.github/workflows/ci.yml'
+  workflow_dispatch:
 jobs:
   # -----------------------------------------------
   # JOB 1: CI (Docker 이미지 빌드 & 푸시)
