@@ -6,17 +6,24 @@ health:
 
 spring:
   datasource:
-    driver-class-name: org.h2.Driver
-    url: jdbc:h2:mem:userdb;DB_CLOSE_DELAY=-1
-    username: sa
-    password:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://localhost:3306/user_db?serverTimezone=Asia/Seoul&characterEncoding=UTF-8
+    username: root
+    password: root
+
   jpa:
     hibernate:
-      ddl-auto: create-drop
-  h2:
-    console:
-      enabled: true
-      path: /user-h2-console
+      ddl-auto: update
+    show-sql: true
+    properties:
+      hibernate:
+        format_sql: true
+        dialect: org.hibernate.dialect.MySQL8Dialect
+
+  data:
+    redis:
+      host: localhost
+      port: 6379
 
   # --- 로컬 Kafka (Docker Compose) 설정 ---
   cloud:
@@ -25,7 +32,7 @@ spring:
     stream:
       kafka:
         binder:
-          brokers: localhost:9092 # ✅ localhost의 Kafka
+          brokers: localhost:9092
       bindings:
         orderCreated-in-0:
           destination: order-created
@@ -34,12 +41,11 @@ spring:
           destination: points-failed
           content-type: application/json
 
-    # --- ⛔️ K8s 기능 "끄기" ---
     kubernetes:
       config:
-        enabled: false # ❗️ K8s ConfigMap 읽기 끄기
+        enabled: false # K8s ConfigMap 읽기 끄기
       discovery:
-        enabled: false # ❗️ K8s Service Discovery 끄기
+        enabled: false # K8s Service Discovery 끄기
 
 management:
   endpoints:
