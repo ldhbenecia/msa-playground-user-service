@@ -1,4 +1,4 @@
-package com.benecia.user_service.dto;
+package com.benecia.user_service.event;
 
 public record PointsFailed(
         Long orderId,
