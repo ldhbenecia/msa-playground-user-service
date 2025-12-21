@@ -1,6 +1,7 @@
 package com.benecia.user_service.service;
 
 import com.benecia.user_service.dto.CreateUserRequest;
+import com.benecia.user_service.dto.LoginUserRequest;
 import com.benecia.user_service.dto.UserResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -18,5 +19,9 @@ public class UserService {
 
     public UserResponse createUser(CreateUserRequest requestDto) {
         return userWriter.createUser(requestDto);
+    }
+
+    public String login(LoginUserRequest requestDto) {
+        return userWriter.login(requestDto);
     }
 }

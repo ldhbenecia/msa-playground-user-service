@@ -1,6 +1,7 @@
 package com.benecia.user_service.controller;
 
 import com.benecia.user_service.dto.CreateUserRequest;
+import com.benecia.user_service.dto.LoginUserRequest;
 import com.benecia.user_service.dto.UserResponse;
 import com.benecia.user_service.service.UserService;
 import lombok.RequiredArgsConstructor;
@@ -30,5 +31,11 @@ public class UserController {
     public ResponseEntity<UserResponse> getUser(@PathVariable String userId) {
         UserResponse response = userService.getUser(userId);
         return ResponseEntity.ok(response);
+    }
+
+    @PostMapping("/login")
+    public ResponseEntity<String> login(@RequestBody LoginUserRequest request) {
+        String token = userService.login(request);
+        return ResponseEntity.ok(token);
     }
 }
