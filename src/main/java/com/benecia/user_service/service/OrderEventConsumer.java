@@ -1,8 +1,9 @@
 package com.benecia.user_service.service;
 
 import com.benecia.user_service.common.AppException;
-import com.benecia.user_service.dto.OrderCreated;
-import com.benecia.user_service.dto.PointsFailed;
+import com.benecia.user_service.event.OrderCancelled;
+import com.benecia.user_service.event.OrderCreated;
+import com.benecia.user_service.event.PointsFailed;
 import java.util.function.Consumer;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -26,7 +27,7 @@ public class OrderEventConsumer {
             try {
                 userWriter.addPoints(orderDto.userId(), orderDto.totalPrice());
                 log.info("Successfully processed points for user: {}", orderDto.userId());
-            } catch (AppException e) { // UserWriter가 던진 AppException을 캐치
+            } catch (AppException e) {
                 log.error("Failed to process points for userId: {}. Reason: {}", orderDto.userId(), e.getMessage());
 
                 // SAGA - 보상 트랜잭션 이벤트(포인트 적립 실패)를 발행
@@ -37,16 +38,27 @@ public class OrderEventConsumer {
                 );
 
                 streamBridge.send("pointsFailed-out-0", failedDto);
-                log.info("Published points-failed event for orderId: {}", orderDto.orderId());
-            } catch (Exception e) { // 7. 그 외 알 수 없는 예외 처리
-                log.error("Unexpected error processing order-created event for userId: {}", orderDto.userId(), e);
+            } catch (Exception e) {
+                log.error("Failed to deduct points: {}", e.getMessage());
                 PointsFailed failedDto = new PointsFailed(
                         orderDto.orderId(),
                         orderDto.userId(),
                         "Unexpected error: " + e.getMessage()
                 );
                 streamBridge.send("pointsFailed-out-0", failedDto);
-                log.info("Published points-failed (unexpected) event for orderId: {}", orderDto.orderId());
+            }
+        };
+    }
+
+    @Bean
+    public Consumer<OrderCancelled> orderCancelled() {
+        return cancelledDto -> {
+            log.info("Received order-cancelled. Refunding points for userId: {}", cancelledDto.userId());
+            try {
+                userWriter.refundPoints(cancelledDto.userId(), cancelledDto.totalPrice());
+            } catch (Exception e) {
+                // 이미 실패해서 포인트가 안 나갔거나 등등. 로그만 남김.
+                log.warn("Failed to refund points (might be not deducted): {}", e.getMessage());
             }
         };
     }

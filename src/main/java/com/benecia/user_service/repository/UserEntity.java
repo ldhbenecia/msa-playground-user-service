@@ -50,4 +50,8 @@ public class UserEntity {
     public void addPoints(long pointsToAdd) {
         this.points += pointsToAdd;
     }
+
+    public void refundPoints(long pointsToRefund) {
+        this.points -= pointsToRefund;
+    }
 }

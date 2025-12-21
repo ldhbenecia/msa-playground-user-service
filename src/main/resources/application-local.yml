@@ -4,6 +4,10 @@ server:
 health:
   message: "Hello from user-service in LOCAL!"
 
+token:
+  secret: c3ByaW5nLWJvb3Qtc2VjdXJpdHktand0LXR1dG9yaWFsLWppd29vbi1zcHJpbmctYm9vdC1zZWN1cml0eS1qd3QtdHV0b3JpYWwK
+  expiration_time: 86400000
+
 spring:
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
@@ -28,7 +32,7 @@ spring:
   # --- 로컬 Kafka (Docker Compose) 설정 ---
   cloud:
     function:
-      definition: orderCreated
+      definition: orderCreated;orderCancelled
     stream:
       kafka:
         binder:
@@ -37,6 +41,11 @@ spring:
         orderCreated-in-0:
           destination: order-created
           group: user-service
+
+        orderCancelled-in-0:
+          destination: order-cancelled
+          group: user-service
+
         pointsFailed-out-0:
           destination: points-failed
           content-type: application/json
@@ -55,3 +64,13 @@ management:
   metrics:
     tags:
       application: user-service
+
+logging:
+  level:
+    com.benecia: INFO
+    root: INFO
+    org.apache.kafka: WARN
+    org.springframework.kafka: WARN
+    org.springframework.cloud.stream: WARN
+    org.apache.kafka.common.utils.AppInfoParser: ERROR
+    org.apache.kafka.common.metrics: ERROR
