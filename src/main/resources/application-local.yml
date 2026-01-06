@@ -29,26 +29,41 @@ spring:
       host: localhost
       port: 6379
 
-  # --- 로컬 Kafka (Docker Compose) 설정 ---
   cloud:
     function:
       definition: orderCreated;orderCancelled
     stream:
-      kafka:
-        binder:
-          brokers: localhost:9092
       bindings:
         orderCreated-in-0:
           destination: order-created
           group: user-service
+          consumer:
+            max-attempts: 3
 
         orderCancelled-in-0:
           destination: order-cancelled
           group: user-service
+          consumer:
+            max-attempts: 3
 
         pointsFailed-out-0:
           destination: points-failed
           content-type: application/json
+
+      kafka:
+        binder:
+          brokers: localhost:9092 # [추가] 명시적으로 브로커 주소 지정
+        bindings:
+          orderCreated-in-0:
+            consumer:
+              enable-dlq: true
+              dlq-name: order-created-user-dlq
+              dlq-partitions: 1
+          orderCancelled-in-0:
+            consumer:
+              enable-dlq: true
+              dlq-name: order-cancelled-user-dlq
+              dlq-partitions: 1
 
     kubernetes:
       config:
