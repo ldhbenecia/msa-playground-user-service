@@ -39,6 +39,16 @@ public class UserWriter {
 
     @Transactional
     public void addPoints(String userId, int pointsToAdd) {
+        // [Test] SAGA Rollback 테스트를 위한 강제 예외 발생
+        if ("VILLAIN".equals(userId)) {
+            log.error("💣 User Service: 으악! 빌런이다! (DLQ 테스트)");
+
+            // 주의: 이 예외는 Consumer의 try-catch 블록에서 잡히므로,
+            // Kafka 레벨의 재시도(Retry)나 DLQ로 이동하지 않음.
+            // 대신 catch 블록에서 'points-failed' 이벤트를 발행하여 즉시 SAGA 보상 트랜잭션(Rollback)을 수행함.
+            throw new RuntimeException("User Service Error Triggered!");
+        }
+
         UserEntity userEntity = userJpaRepository.findByUserId(userId)
                 .orElseThrow(() -> new AppException(ErrorCode.USER_NOT_FOUND, "User not found for userId: " + userId));
 
