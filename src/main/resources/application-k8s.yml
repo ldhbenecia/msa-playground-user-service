@@ -4,6 +4,13 @@ server:
 health:
   message: "Hello from user-service in Helm K8S DEV!"
 
+# JWT 서명 키. 값은 배포 쪽 Secret 이 TOKEN_SECRET 으로 넣음
+# 기본값을 두지 않음 — 빠지면 아무 키로나 뜨는 대신 기동 단계에서 실패해야 함
+# api-gateway 가 같은 키로 검증하므로 두 서비스가 같은 값을 받아야 함
+token:
+  secret: ${TOKEN_SECRET}
+  expiration_time: ${TOKEN_EXPIRATION_TIME:86400000}
+
 spring:
   datasource:
     driver-class-name: org.h2.Driver
