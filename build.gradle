@@ -39,6 +39,8 @@ dependencies {
 
 	implementation("org.springframework.boot:spring-boot-starter-data-jpa")
 	runtimeOnly("com.mysql:mysql-connector-j")
+	// k8s 프로파일이 H2 인메모리 DB 를 씀
+	runtimeOnly 'com.h2database:h2'
 
 	compileOnly 'org.projectlombok:lombok:1.18.34'
 	annotationProcessor 'org.projectlombok:lombok:1.18.34'
