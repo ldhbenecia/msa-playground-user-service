@@ -15,8 +15,10 @@ spring:
   datasource:
     driver-class-name: org.h2.Driver
     url: ${DB_URL}
-    username: ${DB_USER}
-    password: ${DB_PASSWORD}
+    # H2 인메모리 기본 계정이라 비밀이 아님. 기본값을 둬서 환경변수가 없을 때
+    # 플레이스홀더 문자열이 그대로 사용자명이 되는 일을 막음
+    username: ${DB_USER:sa}
+    password: ${DB_PASSWORD:}
 
   jpa:
     hibernate:
